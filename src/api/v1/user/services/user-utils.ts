@@ -1,58 +1,81 @@
 import { ValidationError } from "../../../../infra/errors/errors.js";
 import { UserRequestDto } from "../rest/dtos/user-request-dto.js";
 
-type userValidationData = {
+type UserValidationData = {
   username?: string;
   email?: string;
   password?: string;
 };
 
-export function validateUserInputs(data: userValidationData, isCreation: boolean = false): void {
-  if (isCreation) {
-    if (!data.username || data.username.trim() === "") {
-      throw new ValidationError({
-        message: "Campo 'Nome de usuário' deve estar preenchido.",
-      });
-    }
+// ======================== INDIVIDUAL VALIDATIONS ========================
 
-    if (data.username.length > 30) {
-      throw new ValidationError({
-        message: "Nome de usuário não pode conter mais de 30 caracteres.",
-      });
-    }
+function validateUsername(username: string, isRequired: boolean = false): void {
+  if (isRequired && (!username || username.trim() === "")) {
+    throw new ValidationError({
+      message: "Campo 'Nome de usuário' deve estar preenchido.",
+    });
+  }
 
-    if (!data.email || data.email.trim() === "") {
-      throw new ValidationError({
-        message: "Campo 'e-mail deve estar preenchido.",
-      });
-    }
+  if (username && username.trim() === "") {
+    throw new ValidationError({
+      message: "Nome de usuário não pode estar em branco.",
+    });
+  }
 
-    if (!data.password || data.password.trim() === "") {
-      throw new ValidationError({
-        message: "Campo 'Senha' deve estar preenchido.",
-      });
-    }
-
-    validatePasswordStrength(data.password);
-    validateEmailFormat(data.email);
-  } else {
-    if (data.username !== undefined && (!data.username || data.username.trim() === "")) {
-      throw new ValidationError({
-        message: "Nome de usuário não pode estar em branco.",
-      });
-    }
-
-    if (data.username !== undefined && data.username.length > 30) {
-      throw new ValidationError({
-        message: "Nome de usuário não pode conter mais de 30 caracteres.",
-      });
-    }
-
-    if (data.email) {
-      validateEmailFormat(data.email);
-    }
+  if (username && username.length > 30) {
+    throw new ValidationError({
+      message: "Nome de usuário não pode conter mais de 30 caracteres.",
+    });
   }
 }
+
+function validateEmail(email: string, isRequired: boolean = false): void {
+  if (isRequired && (!email || email.trim() === "")) {
+    throw new ValidationError({
+      message: "Campo 'e-mail' deve estar preenchido.",
+    });
+  }
+
+  if (email) {
+    validateEmailFormat(email);
+  }
+}
+
+function validatePassword(password: string, isRequired: boolean = false): void {
+  if (isRequired && (!password || password.trim() === "")) {
+    throw new ValidationError({
+      message: "Campo 'Senha' deve estar preenchido.",
+    });
+  }
+
+  if (password) {
+    validatePasswordStrength(password);
+  }
+}
+
+// ======================== BUSINESS VALIDATIONS ========================
+
+export function validateUserCreation(data: UserRequestDto): void {
+  validateUsername(data.username, true);
+  validateEmail(data.email, true);
+  validatePassword(data.password, true);
+}
+
+export function validateUserUpdate(data: UserValidationData): void {
+  if (data.username !== undefined) {
+    validateUsername(data.username);
+  }
+
+  if (data.email !== undefined) {
+    validateEmail(data.email);
+  }
+
+  if (data.password !== undefined) {
+    validatePassword(data.password);
+  }
+}
+
+// ======================== AUXILIARY FUNCTIONS ========================
 
 function validateEmailFormat(email: string): void {
   const errors = [];
@@ -60,7 +83,7 @@ function validateEmailFormat(email: string): void {
   const emailRegex =
     /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$/;
 
-  if (email !== undefined && email.trim() === "") {
+  if (email.trim() === "") {
     errors.push("e-mail não pode estar em branco.");
   }
 
@@ -105,10 +128,12 @@ function validatePasswordStrength(password: string): void {
   }
 }
 
+// ======================== PUBLIC FUNCTIONS (COMPATIBILITY) ========================
+
 export function userCreationValidation(data: UserRequestDto): void {
-  validateUserInputs(data, true);
+  validateUserCreation(data);
 }
 
-export function userUpdateValidation(data: userValidationData): void {
-  validateUserInputs(data, false);
+export function userUpdateValidation(data: UserValidationData): void {
+  validateUserUpdate(data);
 }
