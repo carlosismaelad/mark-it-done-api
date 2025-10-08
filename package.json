@@ -1,5 +1,6 @@
 {
   "name": "mark-it-done-api",
+  "type": "module",
   "version": "1.0.0",
   "description": "This is the API for markItDone, our purchasing organization system.",
   "main": "index.js",
@@ -10,5 +11,8 @@
   "license": "ISC",
   "devDependencies": {
     "typescript": "^5.9.3"
+  },
+  "dependencies": {
+    "@types/node": "^24.7.0"
   }
 }
