@@ -1,0 +1,38 @@
+root = true
+
+# General settings
+[*]
+charset = utf-8
+end_of_line = lf
+insert_final_newline = true
+trim_trailing_whitespace = true
+
+[*.{js,jsx,ts,tsx}]
+indent_style = space
+indent_size = 2
+max_line_length = 120
+
+# JSON file settings
+[*.{json,jsonc}]
+indent_style = space
+indent_size = 2
+
+# YAML files (Docker Compose, CI/CD)
+[*.{yml,yaml}]
+indent_style = space
+indent_size = 2
+
+# Markdown files
+[*.md]
+trim_trailing_whitespace = false
+max_line_length = off
+
+# SQL files
+[*.sql]
+indent_style = space
+indent_size = 2
+
+# Dockerfile
+[Dockerfile*]
+indent_style = space
+indent_size = 2

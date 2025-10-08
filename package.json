@@ -5,14 +5,39 @@
   "description": "This is the API for markItDone, our purchasing organization system.",
   "main": "index.js",
   "scripts": {
+    "dev": "npm run services:up && npm run services:wait:database && npm run migrations:up && tsx watch src/index.ts",
+    "services:up": "docker compose -f src/infra/docker/compose.yaml up -d",
+    "services:stop": "docker compose -f src/infra/docker/compose.yaml stop",
+    "services:down": "docker compose -f src/infra/docker/compose.yaml down",
+    "services:wait:database": "node src/infra/database/scripts/wait-for-postgres.js",
+    "migrations:create": "node-pg-migrate --migrations-dir src/infra/database/migrations create",
+    "migrations:up": "node-pg-migrate --migrations-dir src/infra/database/migrations --envPath .env.development up",
+    "build": "tsc",
+    "start": "node dist/index.js",
+    "format": "biome format --write .",
+    "format:check": "biome format .",
+    "lint": "biome lint .",
+    "lint:fix": "biome lint --write .",
+    "check": "biome check .",
+    "check:fix": "biome check --write .",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "Carlos Dourado",
   "license": "ISC",
-  "devDependencies": {
-    "typescript": "^5.9.3"
-  },
   "dependencies": {
-    "@types/node": "^24.7.0"
+    "bcryptjs": "3.0.2",
+    "dotenv": "^17.2.3",
+    "dotenv-expand": "12.0.3",
+    "fastify": "5.6.1",
+    "node-pg-migrate": "8.0.3",
+    "pg": "8.16.3"
+  },
+  "devDependencies": {
+    "@biomejs/biome": "^2.2.5",
+    "@types/node": "^24.7.0",
+    "@types/pg": "8.15.5",
+    "pino-pretty": "^13.1.1",
+    "tsx": "4.20.6",
+    "typescript": "^5.9.3"
   }
 }
