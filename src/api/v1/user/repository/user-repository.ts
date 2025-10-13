@@ -7,7 +7,7 @@ type DatabaseUser = {
   id: string;
   username: string;
   email: string;
-  password: number;
+  password: string;
   created_at: string;
   updated_at: string;
 };
@@ -20,10 +20,10 @@ async function findByUsername(username: string): Promise<DatabaseUser> {
     const results = await database.query({
       text: `
       SELECT
-        * 
-      FROM  
-        users 
-      WHERE 
+        *
+      FROM
+        users
+      WHERE
         LOWER(username) = LOWER($1)
       LIMIT
         1
@@ -40,6 +40,34 @@ async function findByUsername(username: string): Promise<DatabaseUser> {
   }
 }
 
+async function findByEmail(email: string): Promise<DatabaseUser> {
+  const userFound = await runSelectQuery(email);
+  return userFound;
+
+  async function runSelectQuery(username: string) {
+    const results = await database.query({
+      text: `
+      SELECT
+        *
+      FROM
+        users
+      WHERE
+        LOWER(email) = LOWER($1)
+      LIMIT
+        1
+      ;`,
+      values: [email],
+    });
+    if (results.rowCount === 0) {
+      throw new NotFoundError({
+        message: "Não há cadastro de usuário com esse e-mail.",
+        action: "Verifique se o email está digitado corretamente.",
+      });
+    }
+    return results.rows[0];
+  }
+}
+
 async function create(userInputValues: UserRequestDto): Promise<DatabaseUser> {
   await validateUniqueUsername(userInputValues.username);
   await validateUniqueEmail(userInputValues.email);
@@ -50,18 +78,14 @@ async function create(userInputValues: UserRequestDto): Promise<DatabaseUser> {
   async function runInsertQuery(userInputValues: UserRequestDto) {
     const results = await database.query({
       text: `
-        INSERT INTO 
-        users (username, email, password) 
-      VALUES 
+        INSERT INTO
+        users (username, email, password)
+      VALUES
         ($1, $2, $3)
       RETURNING
         *
       ;`,
-      values: [
-        userInputValues.username,
-        userInputValues.email,
-        userInputValues.password,
-      ],
+      values: [userInputValues.username, userInputValues.email, userInputValues.password],
     });
     return results.rows[0];
   }
@@ -71,10 +95,10 @@ async function validateUniqueUsername(username: string) {
   const results = await database.query({
     text: `
       SELECT
-        username 
-      FROM  
-        users 
-      WHERE 
+        username
+      FROM
+        users
+      WHERE
         LOWER(username) = LOWER($1)
       ;`,
     values: [username],
@@ -87,10 +111,7 @@ async function validateUniqueUsername(username: string) {
   }
 }
 
-async function update(
-  username: string,
-  user: UserRequestDto
-): Promise<DatabaseUser> {
+async function update(username: string, user: UserRequestDto): Promise<DatabaseUser> {
   const currentUser = await findByUsername(username);
 
   if ("username" in user) {
@@ -128,12 +149,7 @@ async function update(
         RETURNING
           *
         ;`,
-      values: [
-        userWithNewValues.id,
-        userWithNewValues.username,
-        userWithNewValues.email,
-        userWithNewValues.password,
-      ],
+      values: [userWithNewValues.id, userWithNewValues.username, userWithNewValues.email, userWithNewValues.password],
     });
     return results.rows[0];
   }
@@ -143,10 +159,10 @@ async function validateUniqueEmail(email: string) {
   const results = await database.query({
     text: `
       SELECT
-        email 
-      FROM  
-        users 
-      WHERE 
+        email
+      FROM
+        users
+      WHERE
         LOWER(email) = LOWER($1)
       ;`,
     values: [email],
@@ -168,4 +184,7 @@ export const userRepository = {
   create,
   update,
   findByUsername,
+  findByEmail,
 };
+
+export default userRepository;
