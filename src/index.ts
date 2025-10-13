@@ -2,6 +2,7 @@ import "dotenv/config";
 import Fastify from "fastify";
 import { apiV1Routes } from "./api/v1/routes.js";
 import { config } from "dotenv";
+import fastifyCookie from "@fastify/cookie";
 
 // Carregar variáveis de ambiente do arquivo correto
 config({ path: ".env.development" });
@@ -22,6 +23,11 @@ const server = Fastify({
         },
       }
     : true,
+});
+
+// Registrar plugin de cookies
+await server.register(fastifyCookie, {
+  secret: process.env.COOKIE_SECRET || "sua-chave-secreta-muito-forte",
 });
 
 await server.register(apiV1Routes, { prefix: "/api/v1" });
