@@ -25,7 +25,7 @@ const server = Fastify({
     : true,
 });
 
-// Registrar plugin de cookies
+// Cookie plugin register
 await server.register(fastifyCookie, {
   secret: process.env.COOKIE_SECRET || "sua-chave-secreta-muito-forte",
 });
