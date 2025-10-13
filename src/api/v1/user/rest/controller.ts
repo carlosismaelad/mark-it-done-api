@@ -1,9 +1,6 @@
 import { FastifyReply, FastifyRequest } from "fastify";
 import { UserRequestDto } from "./dtos/user-request-dto.js";
-import {
-  userCreationValidation,
-  userUpdateValidation,
-} from "../services/user-utils.js";
+import { userCreationValidation, userUpdateValidation } from "../services/user-utils.js";
 import { userService } from "../services/user-services.js";
 
 // GET /api/v1/users/:username
@@ -28,10 +25,7 @@ export async function getUserByUsername(
 }
 
 // POST /api/v1/users
-export async function createUser(
-  request: FastifyRequest<{ Body: UserRequestDto }>,
-  reply: FastifyReply
-) {
+export async function createUser(request: FastifyRequest<{ Body: UserRequestDto }>, reply: FastifyReply) {
   const userInputValues: UserRequestDto = request.body;
 
   try {
@@ -45,10 +39,7 @@ export async function createUser(
 
 // PATCH /api/v1/users/:username
 export async function updateUser(
-  request: FastifyRequest<{
-    Params: { username: string };
-    Body: UserRequestDto;
-  }>,
+  request: FastifyRequest<{ Params: { username: string }; Body: UserRequestDto }>,
   reply: FastifyReply
 ) {
   const { username } = request.params;
