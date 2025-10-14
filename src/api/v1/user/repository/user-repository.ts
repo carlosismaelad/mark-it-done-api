@@ -1,6 +1,6 @@
 import database from "@/infra/database/database";
 import { UserRequestDto } from "../rest/dtos/user-request-dto";
-import { NotFoundError, ValidationError } from "@/infra/errors/errors";
+import { NotFoundError, ValidationError } from "@/api/v1/core/errors/errors";
 import { hashPassword } from "../../security/password";
 
 type DatabaseUser = {

@@ -1,4 +1,4 @@
-import { UnauthorizedError } from "@/infra/errors/errors";
+import { UnauthorizedError } from "@/api/v1/core/errors/errors";
 import userRepository from "../../user/repository/user-repository";
 import { SessionResponseDto } from "../rest/dto/session-response";
 import { insertPendingSession, verifyCode, findSessionById } from "../repository/session-repository";

@@ -1,6 +1,6 @@
 import database from "@/infra/database/database";
 import { SessionResponseDto } from "../rest/dto/session-response";
-import { NotFoundError, UnauthorizedError } from "../../../../infra/errors/errors";
+import { NotFoundError, UnauthorizedError } from "../../core/errors/errors";
 import { generateToken, generateVerificationCode } from "../utils/session-utils";
 
 const EXPIRATION_SESSION_MILLISECONDS = 60 * 60 * 24 * 30 * 1000;

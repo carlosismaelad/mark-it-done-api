@@ -1,4 +1,4 @@
-import { ValidationError } from "../../../../infra/errors/errors.js";
+import { ValidationError } from "../../core/errors/errors.js";
 import type { ItemRequestDto } from "../rest/dtos/item-request-dto.js";
 
 type ItemValidationData = {
