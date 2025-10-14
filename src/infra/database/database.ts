@@ -1,5 +1,5 @@
 import { Client, QueryResult, QueryConfig } from "pg";
-import { ServiceError } from "../errors/errors";
+import { ServiceError } from "../../api/v1/core/errors/errors";
 
 async function query(queryObject: string | QueryConfig): Promise<QueryResult> {
   let client: Client | undefined;
