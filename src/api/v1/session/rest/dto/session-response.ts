@@ -5,4 +5,8 @@ export interface SessionResponseDto {
   expires_at: Date;
   created_at: Date;
   updated_at: Date;
+  code: number;
+  code_expires_at: Date;
+  status: string;
+  attempts: number;
 }

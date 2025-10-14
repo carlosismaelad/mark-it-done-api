@@ -1,23 +1,21 @@
 import { FastifyReply, FastifyRequest } from "fastify";
 import { SessionRequest } from "./dto/sesion-request-dto";
-import { createSession, getAuthenticatedUser } from "../service/session-service";
+import { createSessionWithAuth, getAuthenticatedUser, verifySessionCode } from "../service/session-service";
 
-export async function create(request: FastifyRequest<{ Body: SessionRequest }>, reply: FastifyReply) {
-  try {
-    const userInputValues = request.body;
+export async function createPendingSession(request: FastifyRequest<{ Body: SessionRequest }>, reply: FastifyReply) {
+  const userInputValues = request.body;
+  const authenticatedUser = await getAuthenticatedUser(userInputValues.email, userInputValues.password);
+  const newSession = await createSessionWithAuth(authenticatedUser.id);
 
-    const authenticatedUser = await getAuthenticatedUser(userInputValues.email, userInputValues.password);
+  setSessionCookie(reply, newSession.token);
 
-    const newSession = await createSession(authenticatedUser.id);
+  return reply.status(201).send({
+    message: "Sessão criada com sucesso",
+  });
+}
 
-    setSessionCookie(reply, newSession.token);
-
-    return reply.status(201).send({
-      message: "Sessão criada com sucesso",
-    });
-  } catch (error) {
-    throw error;
-  }
+export async function verifyCodeSent(sessionId: string, code: string) {
+  return await verifySessionCode(sessionId, code);
 }
 
 function setSessionCookie(reply: FastifyReply, sessionToken: string) {

@@ -1,6 +1,6 @@
 import { FastifyInstance } from "fastify";
-import { create } from "./rest/controller";
+import { createPendingSession } from "./rest/controller";
 
 export async function sessionRoutes(fastify: FastifyInstance) {
-  fastify.post("/", create);
+  fastify.post("/", createPendingSession);
 }
