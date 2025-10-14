@@ -1,17 +1,14 @@
 import { FastifyReply, FastifyRequest } from "fastify";
 import { SessionRequest } from "./dto/sesion-request-dto";
-import sessionService from "../service/session-service";
+import { createSession, getAuthenticatedUser } from "../service/session-service";
 
-export async function createSession(request: FastifyRequest<{ Body: SessionRequest }>, reply: FastifyReply) {
+export async function create(request: FastifyRequest<{ Body: SessionRequest }>, reply: FastifyReply) {
   try {
     const userInputValues = request.body;
 
-    const authenticatedUser = await sessionService.getAuthenticatedUser(
-      userInputValues.email,
-      userInputValues.password
-    );
+    const authenticatedUser = await getAuthenticatedUser(userInputValues.email, userInputValues.password);
 
-    const newSession = await sessionService.createSession(authenticatedUser.id);
+    const newSession = await createSession(authenticatedUser.id);
 
     setSessionCookie(reply, newSession.token);
 

@@ -4,7 +4,7 @@ import { SessionResponseDto } from "../rest/dto/session-response";
 
 const EXPIRATION_IN_MILLISECONDS = 60 * 60 * 24 * 30 * 1000;
 
-async function create(userId: string): Promise<SessionResponseDto> {
+export async function insertNewSession(userId: string): Promise<SessionResponseDto> {
   const token = crypto.randomBytes(48).toString("hex");
   const expiresAt = new Date(Date.now() + EXPIRATION_IN_MILLISECONDS);
   const newSession = await runInsertQuery(token, userId, expiresAt);
@@ -25,9 +25,3 @@ async function create(userId: string): Promise<SessionResponseDto> {
     return results.rows[0];
   }
 }
-
-const sessionRepository = {
-  create,
-};
-
-export default sessionRepository;

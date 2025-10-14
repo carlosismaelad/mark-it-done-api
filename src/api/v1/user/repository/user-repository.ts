@@ -1,7 +1,7 @@
 import database from "@/infra/database/database";
 import { UserRequestDto } from "../rest/dtos/user-request-dto";
 import { NotFoundError, ValidationError } from "@/infra/errors/errors";
-import password from "@/api/v1/security/password";
+import { hashPassword } from "../../security/password";
 
 type DatabaseUser = {
   id: string;
@@ -176,7 +176,7 @@ async function validateUniqueEmail(email: string) {
 }
 
 async function hashPasswordInObject(userInputValues: UserRequestDto) {
-  const hashedPassword = await password.hash(userInputValues.password);
+  const hashedPassword = await hashPassword(userInputValues.password);
   userInputValues.password = hashedPassword;
 }
 
