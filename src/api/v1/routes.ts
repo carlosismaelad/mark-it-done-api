@@ -1,14 +1,16 @@
-import { FastifyInstance } from "fastify";
-import { usersRoutes } from "./user/routes.js";
-import { itemsRoutes } from "./item/routes.js";
-import { statusRoutes } from "./status/routes.js";
-import { migrationsRoutes } from "./migrations/routes.js";
-import { sessionRoutes } from "./session/routes.js";
+import { Router } from "express";
+import { usersRoutes } from "./user/routes";
+import { itemsRoutes } from "./item/routes";
+import { statusRoutes } from "./status/routes";
+import { migrationsRoutes } from "./migrations/routes";
+import { sessionRoutes } from "./session/routes";
 
-export async function apiV1Routes(fastify: FastifyInstance) {
-  await fastify.register(statusRoutes, { prefix: "/status" });
-  await fastify.register(migrationsRoutes, { prefix: "/migrations" });
-  await fastify.register(usersRoutes, { prefix: "/users" });
-  await fastify.register(itemsRoutes, { prefix: "/items" });
-  await fastify.register(sessionRoutes, { prefix: "/session" });
-}
+const router = Router();
+
+router.use("/status", statusRoutes);
+router.use("/migrations", migrationsRoutes);
+router.use("/users", usersRoutes);
+router.use("/items", itemsRoutes);
+router.use("/session", sessionRoutes);
+
+export { router as apiV1Routes };

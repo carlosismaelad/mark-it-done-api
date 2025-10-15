@@ -1,6 +1,8 @@
-import { FastifyInstance } from "fastify";
+import { Router } from "express";
 import { getDatabaseStatus } from "./rest/status-controller.js";
 
-export async function statusRoutes(fastify: FastifyInstance) {
-  fastify.get("/", getDatabaseStatus);
-}
+const router = Router();
+
+router.get("/", getDatabaseStatus);
+
+export { router as statusRoutes };

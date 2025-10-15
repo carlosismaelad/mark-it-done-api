@@ -1,8 +1,7 @@
-import database from "../../../../infra/database/database";
-import { FastifyReply, FastifyRequest } from "fastify";
+import { Request, Response } from "express";
 import { getStatus } from "../services/status-service";
 
-export async function getDatabaseStatus(request: FastifyRequest, reply: FastifyReply) {
+export async function getDatabaseStatus(req: Request, res: Response) {
   const status = await getStatus();
-  return reply.status(200).send(status);
+  return res.status(200).json(status);
 }

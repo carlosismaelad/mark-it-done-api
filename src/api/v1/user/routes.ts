@@ -1,12 +1,10 @@
-import { FastifyInstance } from "fastify";
-import {
-  getUserByUsername,
-  createUser,
-  updateUser,
-} from "./rest/controller.js";
+import { Router } from "express";
+import { getUserByUsername, createUser, updateUser } from "./rest/user-controller.js";
 
-export async function usersRoutes(fastify: FastifyInstance) {
-  fastify.post("/", createUser);
-  fastify.get("/:username", getUserByUsername);
-  fastify.patch("/:username", updateUser);
-}
+const router = Router();
+
+router.post("/", createUser);
+router.get("/:username", getUserByUsername);
+router.patch("/:username", updateUser);
+
+export { router as usersRoutes };
