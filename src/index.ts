@@ -1,10 +1,10 @@
-import "dotenv/config";
 import express from "express";
 import { apiV1Routes } from "./api/v1/routes.js";
 import { config } from "dotenv";
 import { errorHandler, notFoundHandler } from "./api/v1/core/middleware/error-handler.js";
 
-config({ path: ".env.development" });
+const envFile = process.env.NODE_ENV === "production" ? ".env" : ".env.development";
+config({ path: envFile });
 
 const app = express();
 const port = 8080;
@@ -12,21 +12,21 @@ const port = 8080;
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-// Rota raiz
+// Root route
 app.get("/", (req, res) => {
   res.json({ message: "API ok!" });
 });
 
-// Rotas da API
+// API Routes
 app.use("/api/v1", apiV1Routes);
 
-// Middleware para rotas não encontradas (404) - deve vir DEPOIS de todas as rotas
+// Middleware for all not found (404)
 app.use(notFoundHandler);
 
-// Middleware de tratamento de erros (deve vir por último)
+// Error handling middlewares
 app.use(errorHandler);
 
-// Iniciar servidor
+// Start server
 app.listen(port, () => {
   console.log(`🚀 Server listening at http://localhost:${port}`);
 });

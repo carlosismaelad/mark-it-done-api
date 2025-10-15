@@ -3,11 +3,18 @@ import { serialize } from "cookie";
 import { SessionRequest } from "./dto/sesion-request-dto";
 import { createSessionWithAuth, getAuthenticatedUser, verifySessionCode } from "../service/session-service";
 import { ConfirmSessionDto } from "./dto/confirm-session-dto";
+import emailService from "../../email/email-service";
 
 export async function createPendingSession(req: Request, res: Response) {
   const userInputValues = req.body as SessionRequest;
   const authenticatedUser = await getAuthenticatedUser(userInputValues.email, userInputValues.password);
   const newSession = await createSessionWithAuth(authenticatedUser.id);
+
+  await emailService.sendVerificationEmail({
+    username: authenticatedUser.username,
+    code: newSession.code.toString(),
+    toEmail: authenticatedUser.email,
+  });
 
   res.status(201).json({
     sessionId: newSession.id,
