@@ -7,6 +7,7 @@ async function findOneByUsername(username: string): Promise<UserResponseDto> {
   const user = await userRepository.findByUsername(username);
 
   return {
+    id: user.id,
     username: user.username,
     created_at: user.created_at,
   };
@@ -16,18 +17,17 @@ async function create(user: UserRequestDto): Promise<CreatedUserResponseDto> {
   const newUser = await userRepository.create(user);
 
   return {
-    message: "Usuário cadastrdo com sucesso",
+    id: newUser.id,
     username: newUser.username,
+    message: "Usuário cadastrado com sucesso",
   };
 }
 
-async function update(
-  username: string,
-  userInputValues: UserRequestDto
-): Promise<UserResponseDto> {
+async function update(username: string, userInputValues: UserRequestDto): Promise<UserResponseDto> {
   const updatedUser = await userRepository.update(username, userInputValues);
 
   return {
+    id: updatedUser.id,
     username: updatedUser.username,
     updated_at: updatedUser.updated_at,
   };
