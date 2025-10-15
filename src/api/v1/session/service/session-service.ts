@@ -1,10 +1,10 @@
 import { UnauthorizedError } from "@/api/v1/core/errors/errors";
 import userRepository from "../../user/repository/user-repository";
-import { SessionResponseDto } from "../rest/dto/session-response";
-import { insertPendingSession, verifyCode, findSessionById } from "../repository/session-repository";
+import { insertPendingSession, verifyCode } from "../repository/session-repository";
 import { comparePasswords } from "../../security/password";
+import { Session } from "../entity/session";
 
-export async function createSessionWithAuth(userId: string): Promise<SessionResponseDto> {
+export async function createSessionWithAuth(userId: string): Promise<Session> {
   const newSession = await insertPendingSession(userId);
   return newSession;
 }
@@ -26,12 +26,7 @@ export async function validatePassword(providedPassword: string, storedPassword:
   }
 }
 
-export async function verifySessionCode(sessionId: string, code: string): Promise<SessionResponseDto> {
+export async function verifySessionCode(sessionId: string, code: string): Promise<Session> {
   const verifiedSession = await verifyCode(sessionId, code);
   return verifiedSession;
-}
-
-export async function getSessionById(sessionId: string): Promise<SessionResponseDto> {
-  const session = await findSessionById(sessionId);
-  return session;
 }

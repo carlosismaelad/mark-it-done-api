@@ -1,4 +1,4 @@
-export interface SessionResponseDto {
+export interface Session {
   id: string;
   token: string;
   user_id: string;

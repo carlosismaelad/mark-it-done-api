@@ -1,12 +1,12 @@
 import database from "@/infra/database/database";
-import { SessionResponseDto } from "../rest/dto/session-response";
-import { NotFoundError, UnauthorizedError } from "../../core/errors/errors";
+import { NotFoundError, UnauthorizedError, ValidationError } from "../../core/errors/errors";
 import { generateToken, generateVerificationCode } from "../utils/session-utils";
+import { Session } from "../entity/session";
 
 const EXPIRATION_SESSION_MILLISECONDS = 60 * 60 * 24 * 30 * 1000;
 const EXPIRATION_CODE_MILLISECONDS = 5 * 60 * 1000; // 5 minutos
 
-export async function insertPendingSession(userId: string): Promise<SessionResponseDto> {
+export async function insertPendingSession(userId: string): Promise<Session> {
   const token = generateToken();
   const expiresAt = new Date(Date.now() + EXPIRATION_SESSION_MILLISECONDS);
   const code = generateVerificationCode();
@@ -30,7 +30,7 @@ export async function insertPendingSession(userId: string): Promise<SessionRespo
   }
 }
 
-export async function verifyCode(sessionId: string, inputCode: string): Promise<SessionResponseDto> {
+export async function verifyCode(sessionId: string, inputCode: string): Promise<Session> {
   const session = await findSessionById(sessionId);
 
   if (session.status === "expired") {
@@ -48,14 +48,14 @@ export async function verifyCode(sessionId: string, inputCode: string): Promise<
     if (newAttempts >= 3) {
       await expireSession(sessionId);
       throw new UnauthorizedError({
-        message: "Máximo de tentativas atingido. Sessão expirada.",
+        message: "Máximo de tentativas atingido. Inicie uma nova sessão.",
         action: "Solicite um novo código de verificação.",
       });
     }
 
     throw new UnauthorizedError({
-      message: `Código inválido!`,
-      action: "Verifique o código e tente novamente.",
+      message: "Código inválido!",
+      action: "Verifique o código no seu e-mail e tente novamente.",
     });
   }
 
@@ -63,7 +63,16 @@ export async function verifyCode(sessionId: string, inputCode: string): Promise<
   return session;
 }
 
-export async function findSessionById(sessionId: string): Promise<SessionResponseDto> {
+export async function findSessionById(sessionId: string): Promise<Session> {
+  const uuidRegex = /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
+
+  if (!uuidRegex.test(sessionId)) {
+    throw new ValidationError({
+      message: "O ID informado está no formato incorreto.",
+      action: "Verifique se o ID da sessão está correto ou tente criar uma nova sessão.",
+    });
+  }
+
   const results = await database.query({
     text: `
       SELECT
