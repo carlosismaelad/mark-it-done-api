@@ -1,7 +1,9 @@
-import { FastifyInstance } from "fastify";
-import { createPendingSession, verifyCodeSent } from "./rest/controller";
+import { Router } from "express";
+import { createPendingSession, verifyCodeSent } from "./rest/session-controller.js";
 
-export async function sessionRoutes(fastify: FastifyInstance) {
-  fastify.post("/", createPendingSession);
-  fastify.post("/verify-code", verifyCodeSent);
-}
+const router = Router();
+
+router.post("/", createPendingSession);
+router.post("/verify-code", verifyCodeSent);
+
+export { router as sessionRoutes };

@@ -1,15 +1,17 @@
-import { FastifyReply, FastifyRequest } from "fastify";
+import { Request, Response } from "express";
 import { listPendingMigrations, runPendingMigrations } from "../service/migrations-service";
 
-export async function getPendingMigrations(request: FastifyRequest, reply: FastifyReply) {
+export async function getPendingMigrations(req: Request, res: Response) {
   const pendingMigrations = await listPendingMigrations();
-  return reply.status(200).send(pendingMigrations);
+  return res.status(200).json(pendingMigrations);
 }
 
-export async function runMigrations(request: FastifyRequest, reply: FastifyReply) {
+export async function runMigrations(req: Request, res: Response) {
   const migratedMigration = await runPendingMigrations();
 
   if (migratedMigration.length > 0) {
-    return reply.status(201).send(migratedMigration);
+    return res.status(201).json(migratedMigration);
   }
+
+  return res.status(200).json({ message: "No pending migrations" });
 }

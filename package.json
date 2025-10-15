@@ -21,7 +21,7 @@
     "lint:fix": "biome lint --write .",
     "check": "biome check .",
     "check:fix": "biome check --write .",
-    "test": "npm run services:up && npm run services:wait:database && concurrently -n fastify,jest --hide fastify -k -s command-jest \"tsx watch src/index.ts\" \"jest --runInBand --verbose\"",
+    "test": "npm run services:up && npm run services:wait:database && concurrently -n express,jest --hide express -k -s command-jest \"tsx watch src/index.ts\" \"jest --runInBand --verbose\"",
     "test:watch": "jest --watchAll --runInBand --verbose"
   },
   "author": "Carlos Dourado",
@@ -41,6 +41,7 @@
   "devDependencies": {
     "@biomejs/biome": "^2.2.5",
     "@jest/globals": "30.2.0",
+    "@types/cookie": "^0.6.0",
     "@types/express": "5.0.3",
     "@types/jest": "30.0.0",
     "@types/node": "^24.7.0",

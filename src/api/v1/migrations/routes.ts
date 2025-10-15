@@ -1,7 +1,9 @@
-import { FastifyInstance } from "fastify";
-import { getPendingMigrations, runMigrations } from "./rest/migrations-controller";
+import { Router } from "express";
+import { getPendingMigrations, runMigrations } from "./rest/migrations-controller.js";
 
-export async function migrationsRoutes(fastify: FastifyInstance) {
-  fastify.get("/", getPendingMigrations);
-  fastify.post("/", runMigrations);
-}
+const router = Router();
+
+router.get("/", getPendingMigrations);
+router.post("/", runMigrations);
+
+export { router as migrationsRoutes };

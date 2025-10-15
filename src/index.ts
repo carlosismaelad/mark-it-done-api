@@ -1,45 +1,32 @@
 import "dotenv/config";
-import Fastify from "fastify";
+import express from "express";
 import { apiV1Routes } from "./api/v1/routes.js";
 import { config } from "dotenv";
-import fastifyCookie from "@fastify/cookie";
+import { errorHandler, notFoundHandler } from "./api/v1/core/middleware/error-handler.js";
 
-// Carregar variáveis de ambiente do arquivo correto
 config({ path: ".env.development" });
 
-const isDevelopment = process.env.NODE_ENV !== "production";
+const app = express();
+const port = 8080;
 
-const server = Fastify({
-  logger: isDevelopment
-    ? {
-        transport: {
-          target: "pino-pretty",
-          options: {
-            colorize: true,
-            translateTime: "yyyy-mm-dd HH:MM:ss",
-            ignore: "pid,hostname",
-            singleLine: false,
-          },
-        },
-      }
-    : true,
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
+
+// Rota raiz
+app.get("/", (req, res) => {
+  res.json({ message: "API ok!" });
 });
 
-// Cookie plugin register
-await server.register(fastifyCookie, {
-  secret: process.env.COOKIE_SECRET || "sua-chave-secreta-muito-forte",
-});
+// Rotas da API
+app.use("/api/v1", apiV1Routes);
 
-await server.register(apiV1Routes, { prefix: "/api/v1" });
+// Middleware para rotas não encontradas (404) - deve vir DEPOIS de todas as rotas
+app.use(notFoundHandler);
 
-server.listen({ port: 8080 }, (err, address) => {
-  if (err) {
-    console.error(err);
-    process.exit(1);
-  }
-  console.log(`🚀 Server listening at ${address}`);
-});
+// Middleware de tratamento de erros (deve vir por último)
+app.use(errorHandler);
 
-server.get("/", (request, reply) => {
-  reply.send({ hello: "world" });
+// Iniciar servidor
+app.listen(port, () => {
+  console.log(`🚀 Server listening at http://localhost:${port}`);
 });
