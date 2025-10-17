@@ -51,15 +51,7 @@ export class ValidationError extends Error {
   public action: string;
   public statusCode: number;
 
-  constructor({
-    cause,
-    message,
-    action,
-  }: {
-    cause?: unknown;
-    message?: string;
-    action?: string;
-  }) {
+  constructor({ cause, message, action }: { cause?: unknown; message?: string; action?: string }) {
     super(message ?? "Um erro de validação ocorreu.", { cause });
     this.name = "ValidationError";
     this.action = action ?? "Ajuste os dados enviados e tente novamente.";
@@ -80,15 +72,7 @@ export class NotFoundError extends Error {
   public action: string;
   public statusCode: number;
 
-  constructor({
-    cause,
-    message,
-    action,
-  }: {
-    cause?: unknown;
-    message?: string;
-    action?: string;
-  }) {
+  constructor({ cause, message, action }: { cause?: unknown; message?: string; action?: string }) {
     super(message ?? "Não foi possível localizar o que você deseja no sistema.", { cause });
     this.name = "NotFoundError";
     this.action = action ?? "Verifique se os parâmetros enviados na consulta estão corretos.";
@@ -109,15 +93,7 @@ export class UnauthorizedError extends Error {
   public action: string;
   public statusCode: number;
 
-  constructor({
-    cause,
-    message,
-    action,
-  }: {
-    cause?: unknown;
-    message?: string;
-    action?: string;
-  }) {
+  constructor({ cause, message, action }: { cause?: unknown; message?: string; action?: string }) {
     super(message ?? "Usuário não autenticado.", { cause });
     this.name = "UnauthorizedError";
     this.action = action ?? "Verifique se os dados enviados estão corretos e tente novamente.";

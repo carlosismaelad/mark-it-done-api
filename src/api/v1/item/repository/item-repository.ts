@@ -25,21 +25,13 @@ async function create(itemInputValues: ItemRequestDto): Promise<DatabaseItem> {
         RETURNING
           *
         ;`,
-      values: [
-        itemInputValues.name,
-        itemInputValues.mark,
-        itemInputValues.unitPrice,
-        itemInputValues.quantity,
-      ],
+      values: [itemInputValues.name, itemInputValues.mark, itemInputValues.unitPrice, itemInputValues.quantity],
     });
     return results.rows[0];
   }
 }
 
-async function update(
-  itemId: string,
-  itemInputValues: ItemRequestDto
-): Promise<DatabaseItem> {
+async function update(itemId: string, itemInputValues: ItemRequestDto): Promise<DatabaseItem> {
   const currentItem = await findItemById(itemId);
 
   const updatedFields = {
@@ -52,12 +44,7 @@ async function update(
   const updatedItem = await runUpdateQuery(updatedFields);
   return updatedItem;
 
-  async function runUpdateQuery(fields: {
-    name: string;
-    mark?: string;
-    unit_price?: number;
-    quantity?: number;
-  }) {
+  async function runUpdateQuery(fields: { name: string; mark?: string; unit_price?: number; quantity?: number }) {
     const results = await database.query({
       text: `
         UPDATE
@@ -73,13 +60,7 @@ async function update(
         RETURNING
           *
         ;`,
-      values: [
-        itemId,
-        fields.name,
-        fields.mark,
-        fields.unit_price,
-        fields.quantity,
-      ],
+      values: [itemId, fields.name, fields.mark, fields.unit_price, fields.quantity],
     });
     return results.rows[0];
   }

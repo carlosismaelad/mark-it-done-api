@@ -8,8 +8,8 @@ import {
   MethodNotAllowedError,
 } from "../errors/errors.js";
 
-export function errorHandler(err: Error, req: Request, res: Response, next: NextFunction) {
-  // Log do erro para debugging
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+export function errorHandler(err: Error, req: Request, res: Response, _next: NextFunction) {
   console.error(`[${new Date().toISOString()}] Error:`, {
     name: err.name,
     message: err.message,

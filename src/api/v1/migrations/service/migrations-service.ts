@@ -10,7 +10,7 @@ const defaultMigrationsOptions = {
   migrationsTable: "pgmigrations",
 };
 
-export async function listPendingMigrations(): Promise<any[]> {
+export async function listPendingMigrations(): Promise<unknown[]> {
   let dbClient;
 
   try {
@@ -26,7 +26,7 @@ export async function listPendingMigrations(): Promise<any[]> {
   }
 }
 
-export async function runPendingMigrations(): Promise<any[]> {
+export async function runPendingMigrations(): Promise<unknown[]> {
   let dbClient;
 
   try {
