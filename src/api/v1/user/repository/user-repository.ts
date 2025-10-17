@@ -44,7 +44,7 @@ async function findByEmail(email: string): Promise<DatabaseUser> {
   const userFound = await runSelectQuery(email);
   return userFound;
 
-  async function runSelectQuery(username: string) {
+  async function runSelectQuery(email: string) {
     const results = await database.query({
       text: `
       SELECT

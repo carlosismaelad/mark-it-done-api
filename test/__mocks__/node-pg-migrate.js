@@ -1,3 +1,1 @@
-module.exports = {
-  runner: () => Promise.resolve([]),
-};
+export const runner = () => Promise.resolve([]);
