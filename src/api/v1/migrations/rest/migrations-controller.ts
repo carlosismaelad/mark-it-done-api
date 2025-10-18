@@ -13,5 +13,5 @@ export async function runMigrations(req: Request, res: Response) {
     return res.status(201).json(migratedMigration);
   }
 
-  return res.status(200).json({ message: "No pending migrations" });
+  return res.status(200).json(migratedMigration);
 }
