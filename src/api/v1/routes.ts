@@ -11,6 +11,6 @@ router.use("/status", statusRoutes);
 router.use("/migrations", migrationsRoutes);
 router.use("/users", usersRoutes);
 router.use("/items", itemsRoutes);
-router.use("/session", sessionRoutes);
+router.use("/sessions", sessionRoutes);
 
 export { router as apiV1Routes };

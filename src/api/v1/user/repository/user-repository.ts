@@ -1,6 +1,6 @@
 import database from "@/infra/database/database";
 import { UserRequestDto } from "../rest/dtos/user-request-dto";
-import { NotFoundError, ValidationError } from "@/api/v1/core/errors/errors";
+import { NotFoundError, UnauthorizedError, ValidationError } from "@/api/v1/core/errors/errors";
 import { hashPassword } from "../../security/password";
 
 type DatabaseUser = {
@@ -59,9 +59,9 @@ async function findByEmail(email: string): Promise<DatabaseUser> {
       values: [email],
     });
     if (results.rowCount === 0) {
-      throw new NotFoundError({
-        message: "Não há cadastro de usuário com esse e-mail.",
-        action: "Verifique se o email está digitado corretamente.",
+      throw new UnauthorizedError({
+        message: "Dados de autenticação não conferem.",
+        action: "Verifique se os dados enviados estão corretos.",
       });
     }
     return results.rows[0];

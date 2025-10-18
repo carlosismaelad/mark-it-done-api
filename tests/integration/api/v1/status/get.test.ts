@@ -1,18 +1,27 @@
-import { clearDatabase, runMigrationsBeforeTests, waitForAllServices } from "../../../../orchestrator";
+import * as orchestrator from "../../../../orchestrator";
+
+interface StatusResponse {
+  updated_at: string;
+  dependencies: {
+    database: {
+      version: string;
+      max_connections: number;
+      opened_connections: number;
+    };
+  };
+}
 
 beforeAll(async () => {
-  await waitForAllServices();
-  // await clearDatabase();
-  // await runMigrationsBeforeTests();
+  await orchestrator.waitForAllServices();
 });
 
 describe("GET /api/v1/status", () => {
   describe("Anonymous user", () => {
-    test("Getting current system status", async () => {
+    test("Retrieving current system status", async () => {
       const response = await fetch("http://localhost:8080/api/v1/status");
       expect(response.status).toBe(200);
 
-      const responseBody = (await response.json()) as any;
+      const responseBody = (await response.json()) as StatusResponse;
 
       const parsedUpdatedAt = new Date(responseBody.updated_at).toISOString();
       expect(responseBody.updated_at).toEqual(parsedUpdatedAt);
