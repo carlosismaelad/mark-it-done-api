@@ -20,7 +20,7 @@ export async function validatePassword(providedPassword: string, storedPassword:
 
   if (!correctPasswordMatch) {
     throw new UnauthorizedError({
-      message: "Password não confere.",
+      message: "Senha ou e-mail incorreto!",
       action: "Verifique se os dados enviados estão corretos.",
     });
   }
