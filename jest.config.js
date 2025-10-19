@@ -1,32 +1,42 @@
+import { config } from "dotenv";
+config({
+  path: ".env.development",
+});
+
 export default {
-  // Configuration for TypeScript + ES Modules
+  // ESM configuration for automatic CommonJS/ESM interoperability
   preset: "ts-jest/presets/default-esm",
   extensionsToTreatAsEsm: [".ts"],
   testEnvironment: "node",
 
-  // Load environment variables for tests
-  setupFiles: ["<rootDir>/tests/setup.ts"],
+  // Let Jest handle module resolution automatically
+  moduleDirectories: ["node_modules", "<rootDir>"],
 
-  // Where to look for tests (in your tests/ folder)
+  // Test files location
   testMatch: ["<rootDir>/tests/**/*.test.ts"],
 
-  // Transform ES Modules from node_modules
-  transformIgnorePatterns: ["node_modules/(?!(uuid|@faker-js/faker|set-cookie-parser|node-pg-migrate)/)"],
-
-  // Mock problematic ES Modules
-  moduleNameMapper: {
-    "^(\\.{1,2}/.*)\\.js$": "$1",
-    "^@/(.*)$": "<rootDir>/src/$1",
-    "^../src/api/v1/migrations/service/migrations-service$": "<rootDir>/tests/__mocks__/migrations-service-mock.ts",
-  },
-
-  // How to transform TypeScript files
+  // Transform configuration for ESM
   transform: {
     "^.+\\.(ts|js)$": [
       "ts-jest",
       {
         useESM: true,
+        tsconfig: {
+          rootDir: ".",
+        },
       },
     ],
   },
+
+  // Transform ESM packages
+  transformIgnorePatterns: ["node_modules/(?!(uuid|@faker-js/faker|set-cookie-parser)/)"],
+
+  // Path mapping
+  moduleNameMapper: {
+    "^(\\.{1,2}/.*)\\.js$": "$1",
+    "^@/(.*)$": "<rootDir>/src/$1",
+  },
+
+  // Timeout for integration tests
+  testTimeout: 60000,
 };
