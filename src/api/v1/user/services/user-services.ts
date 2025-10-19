@@ -19,7 +19,6 @@ async function create(user: UserRequestDto): Promise<CreatedUserResponseDto> {
   return {
     id: newUser.id,
     username: newUser.username,
-    message: "Usuário cadastrado com sucesso",
   };
 }
 
