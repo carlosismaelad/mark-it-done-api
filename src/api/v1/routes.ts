@@ -1,6 +1,6 @@
 import { Router } from "express";
-import { usersRoutes } from "./user/routes";
 import { itemsRoutes } from "./item/routes";
+import { usersRoutes } from "./user/routes/routes";
 import { statusRoutes } from "./status/routes";
 import { migrationsRoutes } from "./migrations/routes";
 import { sessionRoutes } from "./session/routes";

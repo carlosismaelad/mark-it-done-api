@@ -91,26 +91,6 @@ async function create(userInputValues: UserRequestDto): Promise<DatabaseUser> {
   }
 }
 
-async function validateUniqueUsername(username: string) {
-  const results = await database.query({
-    text: `
-      SELECT
-        username
-      FROM
-        users
-      WHERE
-        LOWER(username) = LOWER($1)
-      ;`,
-    values: [username],
-  });
-  if (results.rowCount && results.rowCount > 0) {
-    throw new ValidationError({
-      message: "Não foi possível usar este nome de usuário.",
-      action: "Utilize outro username para realizar esta operação.",
-    });
-  }
-}
-
 async function update(username: string, user: UserRequestDto): Promise<DatabaseUser> {
   const currentUser = await findByUsername(username);
 
@@ -152,6 +132,26 @@ async function update(username: string, user: UserRequestDto): Promise<DatabaseU
       values: [userWithNewValues.id, userWithNewValues.username, userWithNewValues.email, userWithNewValues.password],
     });
     return results.rows[0];
+  }
+}
+
+async function validateUniqueUsername(username: string) {
+  const results = await database.query({
+    text: `
+      SELECT
+        username
+      FROM
+        users
+      WHERE
+        LOWER(username) = LOWER($1)
+      ;`,
+    values: [username],
+  });
+  if (results.rowCount && results.rowCount > 0) {
+    throw new ValidationError({
+      message: "Não é possível usar este nome de usuário.",
+      action: "Utilize outro nome para realizar esta operação.",
+    });
   }
 }
 

@@ -51,8 +51,21 @@ export async function createUserOrchestrator(userObject?: UserObject) {
   return await userService.create({
     username: userObject?.username || faker.internet.username().replace(/[_.-]/g, ""),
     email: userObject?.email || faker.internet.email(),
-    password: userObject?.password || "validpassword",
+    password: userObject?.password || "validPassword@123",
   });
+}
+
+export async function createUserViaHttp(userObject?: UserObject) {
+  const response = await fetch("http://localhost:8080/api/v1/users", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({
+      username: userObject?.username || faker.internet.username().replace(/[_.-]/g, ""),
+      email: userObject?.email || faker.internet.email(),
+      password: userObject?.password || "validPassword@123",
+    }),
+  });
+  return response;
 }
 
 export async function createSession(userId: string) {
