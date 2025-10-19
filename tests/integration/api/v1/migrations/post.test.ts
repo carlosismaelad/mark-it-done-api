@@ -1,4 +1,4 @@
-import { clearDatabase, waitForAllServices } from "../../../../orchestrator";
+import { clearDatabase, runMigrationsBeforeTests, waitForAllServices } from "../../../../orchestrator";
 
 beforeAll(async () => {
   await waitForAllServices();
