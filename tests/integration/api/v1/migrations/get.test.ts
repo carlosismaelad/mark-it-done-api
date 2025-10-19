@@ -1,8 +1,8 @@
-import * as orchestrator from "../../../../orchestrator";
+import { clearDatabase, waitForAllServices } from "../../../../orchestrator";
 
 beforeAll(async () => {
-  await orchestrator.waitForAllServices();
-  await orchestrator.clearDatabase();
+  await waitForAllServices();
+  await clearDatabase();
 });
 
 describe("GET /api/v1/migrations", () => {

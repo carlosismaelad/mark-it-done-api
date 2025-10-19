@@ -1,4 +1,4 @@
-import * as orchestrator from "../../../../orchestrator";
+import { waitForAllServices } from "../../../../orchestrator";
 
 interface StatusResponse {
   updated_at: string;
@@ -12,7 +12,7 @@ interface StatusResponse {
 }
 
 beforeAll(async () => {
-  await orchestrator.waitForAllServices();
+  await waitForAllServices();
 });
 
 describe("GET /api/v1/status", () => {

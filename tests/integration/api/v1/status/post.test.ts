@@ -1,7 +1,7 @@
-import * as orchestrator from "../../../../orchestrator";
+import { waitForAllServices } from "../../../../orchestrator";
 
 beforeAll(async () => {
-  await orchestrator.waitForAllServices();
+  await waitForAllServices();
 });
 
 describe("POST /api/vi/status", () => {

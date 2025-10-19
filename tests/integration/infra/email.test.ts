@@ -1,13 +1,13 @@
 import emailService from "../../../src/api/v1/email/email-service";
-import * as orchestrator from "../../orchestrator";
+import { deleteAllEmails, getLastEmail, waitForAllServices } from "../../orchestrator";
 
 beforeAll(async () => {
-  await orchestrator.waitForAllServices();
+  await waitForAllServices();
 });
 
 describe("email-service", () => {
   test("Send verification email", async () => {
-    await orchestrator.deleteAllEmails();
+    await deleteAllEmails();
 
     await emailService.sendVerificationEmail({
       username: "testuser",
@@ -15,7 +15,7 @@ describe("email-service", () => {
       toEmail: "test@example.com",
     });
 
-    const lastEmail = await orchestrator.getLastEmail();
+    const lastEmail = await getLastEmail();
 
     expect(lastEmail).not.toBeNull();
     expect(lastEmail?.subject).toContain("Código de Verificação - MarkIt Done");
