@@ -4,3 +4,5 @@ build/
 .git/
 *.min.js
 package-lock.json
+jest.config.js
+

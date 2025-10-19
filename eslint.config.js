@@ -17,6 +17,7 @@ export default [
       "**/*.spec.{js,ts}", // Arquivos de spec
       "**/__mocks__/**", // Arquivos de mock
       "*.min.js",
+      "jest.config.js",
     ],
     plugins: {
       "@typescript-eslint": typescript,

@@ -20,8 +20,8 @@
     "prettier:fix": "prettier --write .",
     "eslint:check": "eslint .",
     "eslint:fix": "eslint . --fix",
-    "test": "npm run services:up && npm run services:wait:database && concurrently -n express,jest --hide express -k -s command-jest \"tsx watch src/index.ts\" \"jest --runInBand --verbose\"",
-    "test:watch": "jest --watchAll --runInBand --verbose",
+    "test": "npm run services:up && npm run services:wait:database && concurrently -n express,jest --hide express -k -s command-jest \"tsx watch src/index.ts\" \"NODE_OPTIONS=--experimental-vm-modules jest --runInBand --verbose\"",
+    "test:watch": "NODE_OPTIONS=--experimental-vm-modules jest --watchAll --runInBand --verbose",
     "prepare": "husky",
     "commit": "cz"
   },
